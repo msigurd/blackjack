@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang='en-US'>
+  <head>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Blackjack</title>
+    <script type='text/javascript' src='script.js'></script>
+    <link rel='stylesheet' href='style.css'>
+    <meta name='description' content='A card game about not exceeding 21 points.'>
+  </head>
+  <body>
+    <main>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <div id='dealer-deck' class='deck'>
+        <div class='card'>
+          <div class='card-rank'>B</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>L</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>A</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>C</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>K</div>
+        </div>
+      </div>
+      <div id='action-area'>
+        <button id='play-btn' type='button'>Play</button>
+        <div id='actions' hidden>
+          <form>
+            <div id='game-info'>
+              <div class='info'>
+                <label for='dealer-hand-value'>Dealer's hand</label>
+                <output id='dealer-hand-value' class='info-value'></output>
+              </div>
+              <div class='info'>
+                <label for='player-hand-value'>Your hand</label>
+                <output id='player-hand-value' class='info-value'></output>
+              </div>
+            </div>
+            <div id='action-btns'>
+              <button id='hit-btn' class='action-btn' type='button' disabled>Hit</button>
+              <button id='stand-btn' class='action-btn' type='button' disabled>Stand</button>
+            </div>
+          </form>
+        </div>
+        <dialog id='end-dialog'>
+          <div class='dialog-content'>
+            <p id='game-result'></p>
+            <button id='play-again-btn' type='button'>Play again</button>
+          </div>
+        </dialog>
+      </div>
+      <div id='player-deck' class='deck'>
+        <div class='card'>
+          <div class='card-rank'>J</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>A</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>C</div>
+        </div>
+        <div class='card'>
+          <div class='card-rank'>K</div>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <a href='https://github.com/msigurd/blackjack' target='_blank' rel='noopener noreferrer'>
+        Source code
+      </a>
+    </footer>
+    <!-- TEMPLATES -->
+    <template id='card-template'>
+      <div class='card'>
+        <div class='card-back'></div>
+        <img class='suit suit-top'>
+        <div class='card-rank'></div>
+        <img class='suit suit-bottom'>
+      </div>
+    </template>
+  </body>
+</html>
