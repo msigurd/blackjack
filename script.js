@@ -1,12 +1,12 @@
 'use strict';
 
-import { calculateSums, withTimeout, shuffledArray } from './javascript/helpers.js';
+import { Hand } from './javascript/Hand.js';
+import { withTimeout, shuffledArray } from './javascript/helpers.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const SUITS = Object.freeze(['diamonds', 'hearts', 'spades', 'clubs']);
   const RANKS = Object.freeze(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);
   const FULL_DECK_OF_CARDS = Object.freeze(generatedDeckOfCards());
-  const FRESH_HAND = Object.freeze({ values: [], ranks: [] });
   const DRAW_DELAY_IN_MS = 500;
   const MAX_CARDS_IN_DECK = 5;
   const ACTIONS = document.getElementById('actions');
@@ -40,8 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function reset() {
     deckOfCards = shuffledArray(FULL_DECK_OF_CARDS);
-    playerHand = structuredClone(FRESH_HAND);
-    dealerHand = structuredClone(FRESH_HAND);
+    playerHand = new Hand();
+    dealerHand = new Hand(true);
     PLAYER_HAND_VALUE.value = '-';
     DEALER_HAND_VALUE.value = '???';
     DEALER_DECK.replaceChildren();
@@ -87,24 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
     return withTimeout(() => {
       const card = deckOfCards.pop();
       deckEl.appendChild(generatedCardEl(card, isFirst));
-      addCardToHand(hand, card);
+      hand.add(card);
     }, withDelay ? DRAW_DELAY_IN_MS : 0);
-  }
-
-  function addCardToHand(hand, card) {
-    hand.ranks.push(card.rank);
-    hand.values = calculatedHandValues(hand.ranks);
-  }
-
-  function calculatedHandValues(ranksInHand) {
-    if (ranksInHand.length === 1) return valuesOfRank(ranksInHand[0]);
-
-    const handValues = calculateSums(ranksInHand.map(rank => valuesOfRank(rank)));
-
-    if (handValues.includes(21)) return [21];
-    if (handValues[0] > 21) return [handValues[0]];
-
-    return [...new Set(handValues.filter(v => v < 21))]; // return values below 21, without duplicates
   }
 
   function hit() {
@@ -122,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function standIfMaxOrBust() {
-    if (deckIsFull(PLAYER_DECK) || bestHandValue(playerHand) === 21 || handBusts(playerHand)) {
+    if (playerHand.cards.length === MAX_CARDS_IN_DECK || playerHand.bestValue === 21 || playerHand.isBust) {
       stand();
     }
   }
@@ -130,17 +114,6 @@ document.addEventListener('DOMContentLoaded', () => {
   async function drawFinalDealerCards() {
     while (dealerShouldDrawCards()) {
       await drawDealerCard().then(updateDisplayedDealerHandValue);
-    }
-  }
-
-  function valuesOfRank(rank) {
-    switch(rank) {
-      case 'A':
-        return [1, 11];
-      case 'J': case 'Q': case 'K':
-        return [10];
-      default:
-        return [Number(rank)];
     }
   }
 
@@ -162,62 +135,22 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function updateDisplayedHandValue(handValueEl, hand, onlyBest = false) {
-    handValueEl.value = onlyBest ? bestHandValue(hand) : hand.values.join(' or ');
+    handValueEl.value = onlyBest ? hand.bestValue : hand.values.join(' or ');
   }
 
   function handleGameOutcome() {
-    if (playerIsGuaranteedToWin() || playerHasHigherHand()) {
+    if (playerHand > dealerHand) {
       showEndDialog('Win');
-    } else if (playerIsGuaranteedToLose() || playerHasLowerHand()) {
+    } else if (playerHand < dealerHand) {
       showEndDialog('Loss');
     } else {
       showEndDialog('Push');
     }
   }
 
-  function bestHandValue(hand) {
-    return Math.max(...hand.values);
-  }
-
-  function dealerHasHardSeventeen() {
-    return Math.min(...dealerHand.values) >= 17 && !handBusts(dealerHand);
-  }
-
-  function handBusts(hand) {
-    return bestHandValue(hand) > 21;
-  }
-
-  function handHasBlackjack(hand) {
-    return bestHandValue(hand) === 21 && hand.ranks.length === 2;
-  }
-
-  function playerWinsByFiveCardCharlieRule() {
-    return playerHand.ranks.length === 5 && !handBusts(playerHand);
-  }
-
-  function playerIsGuaranteedToWin() {
-    return handBusts(dealerHand) || playerWinsByFiveCardCharlieRule() || handHasBlackjack(playerHand) && !handHasBlackjack(dealerHand);
-  }
-
-  function playerIsGuaranteedToLose() {
-    return handBusts(playerHand) || !playerWinsByFiveCardCharlieRule() && !handHasBlackjack(playerHand) && handHasBlackjack(dealerHand);
-  }
-
-  function playerHasHigherHand() {
-    return !handBusts(playerHand) && bestHandValue(playerHand) > bestHandValue(dealerHand);
-  }
-
-  function playerHasLowerHand() {
-    return !handBusts(dealerHand) && bestHandValue(playerHand) < bestHandValue(dealerHand);
-  }
-
   function dealerShouldDrawCards() {
-    return !(playerIsGuaranteedToWin() || playerIsGuaranteedToLose() || playerHasLowerHand() ||
-             deckIsFull(DEALER_DECK) || dealerHasHardSeventeen());
-  }
-
-  function deckIsFull(deckEl) {
-    return deckEl.querySelectorAll('.card').length === MAX_CARDS_IN_DECK;
+    return !dealerHand.isBust && dealerHand < playerHand && dealerHand.cards.length < MAX_CARDS_IN_DECK
+             && !dealerHand.hasHardSeventeen && !playerHand.winsByFiveCardCharlieRule;
   }
 
   function generatedCardEl({ suit, rank }, isFaceDown = false) {
