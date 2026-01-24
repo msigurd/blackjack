@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function reset() {
-    deckOfCards = structuredClone(FULL_DECK_OF_CARDS);
+    deckOfCards = shuffledArray(FULL_DECK_OF_CARDS);
     playerHand = structuredClone(FRESH_HAND);
     dealerHand = structuredClone(FRESH_HAND);
     PLAYER_HAND_VALUE.value = '-';
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function drawCard(deckEl, hand, isFirst = false, withDelay = true) {
     return withTimeout(() => {
-      const card = drawRandomCard();
+      const card = deckOfCards.pop();
       deckEl.appendChild(generatedCardEl(card, isFirst));
       addCardToHand(hand, card);
     }, withDelay ? DRAW_DELAY_IN_MS : 0);
@@ -129,14 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
     while (dealerShouldDrawCards()) {
       await drawDealerCard().then(updateDisplayedDealerHandValue);
     }
-  }
-
-  function drawRandomCard() {
-    const randomCardIndex = Math.floor(Math.random() * deckOfCards.length);
-    const randomCard = deckOfCards[randomCardIndex];
-    deckOfCards.splice(randomCardIndex, 1); // remove card from deck
-
-    return randomCard;
   }
 
   function valuesOfRank(rank) {
@@ -273,4 +265,16 @@ function withTimeout(callback, ms) {
     callback();
     resolve();
   }, ms));
+}
+
+// Based on https://stackoverflow.com/a/12646864
+function shuffledArray(array) {
+  const shuffledArray = structuredClone(array);
+
+  for (let i = shuffledArray.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+
+  return shuffledArray;
 }
