@@ -1,5 +1,7 @@
 'use strict';
 
+import { calculateSums, withTimeout, shuffledArray } from './javascript/helpers.js';
+
 document.addEventListener('DOMContentLoaded', () => {
   const SUITS = Object.freeze(['diamonds', 'hearts', 'spades', 'clubs']);
   const RANKS = Object.freeze(['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']);
@@ -243,38 +245,3 @@ document.addEventListener('DOMContentLoaded', () => {
   HIT_BTN.addEventListener('click', hit);
   STAND_BTN.addEventListener('click', stand);
 });
-
-/* Helpers */
-
-// Calculates all possible sums of an array of number arrays
-// Example: calculateSums([[5], [1, 11]]) will return [6, 16]
-function calculateSums(arrays) {
-  return arrays.reduce((acc, curr) => {
-    const sums = [];
-
-    acc.forEach(sum => {
-      curr.forEach(num => sums.push(sum + num));
-    });
-
-    return sums;
-  }, [0]);
-}
-
-function withTimeout(callback, ms) {
-  return new Promise(resolve => setTimeout(() => {
-    callback();
-    resolve();
-  }, ms));
-}
-
-// Based on https://stackoverflow.com/a/12646864
-function shuffledArray(array) {
-  const shuffledArray = structuredClone(array);
-
-  for (let i = shuffledArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
-  }
-
-  return shuffledArray;
-}
