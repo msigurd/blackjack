@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function dealerHasHardSeventeen() {
-    return bestHandValue(dealerHand) >= 17 && !dealerHand.values.includes('A') && !handBusts(dealerHand);
+    return Math.min(...dealerHand.values) >= 17 && !handBusts(dealerHand);
   }
 
   function handBusts(hand) {
