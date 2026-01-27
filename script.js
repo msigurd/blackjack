@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function dealerShouldDrawCards() {
-    return !dealerHand.isBust && dealerHand < playerHand && dealerHand.cards.length < MAX_CARDS_IN_DECK
+    return !dealerHand.isBust && dealerHand <= playerHand && dealerHand.cards.length < MAX_CARDS_IN_DECK
              && !dealerHand.hasHardSeventeen && !playerHand.winsByFiveCardCharlieRule && !playerHand.hasBlackjack;
   }
 
