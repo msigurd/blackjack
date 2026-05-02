@@ -162,3 +162,10 @@ footer {
 #action-btns {
   > * + * { margin-top: .5rem }
 }
+
+#win-loss {
+  font-size: 12px;
+  text-align: center;
+}
+
+#player-wins, #dealer-wins, #win-loss-rate { font-weight: bold }

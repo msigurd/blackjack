@@ -20,18 +20,25 @@ document.addEventListener('DOMContentLoaded', () => {
   const PLAY_AGAIN_BTN = document.getElementById('play-again-btn');
   const HIT_BTN = document.getElementById('hit-btn');
   const STAND_BTN = document.getElementById('stand-btn');
+  const WIN_LOSS_EL = document.getElementById('win-loss');
+  const PLAYER_WINS_EL = document.getElementById('player-wins');
+  const WIN_LOSS_RATE_EL = document.getElementById('win-loss-rate');
+  const DEALER_WINS_EL = document.getElementById('dealer-wins');
   const CARD_TEMPLATE = document.getElementById('card-template');
   let deckOfCards, playerHand, dealerHand;
+  let [playerWins, dealerWins] = [0, 0];
 
   toggleActionButtons(false);
 
   function start() {
     showActions();
+    WIN_LOSS_EL.hidden = false;
     play();
   }
 
   function play() {
     reset();
+    updateWinLoss();
     deal().then(() => {
       toggleActionButtons(true);
       standIfMaxOrBust();
@@ -138,10 +145,20 @@ document.addEventListener('DOMContentLoaded', () => {
     handValueEl.value = onlyBest ? hand.bestValue : hand.values.join(' or ');
   }
 
+  function updateWinLoss() {
+    if (!playerWins && !dealerWins) return;
+
+    PLAYER_WINS_EL.innerText = String(playerWins);
+    WIN_LOSS_RATE_EL.innerText = String(Math.round(playerWins / (playerWins + dealerWins) * 100)) + '%';
+    DEALER_WINS_EL.innerText = String(dealerWins);
+  }
+
   function handleGameOutcome() {
     if (playerHand > dealerHand) {
+      playerWins++;
       showEndDialog('Win');
     } else if (playerHand < dealerHand) {
+      dealerWins++;
       showEndDialog('Loss');
     } else {
       showEndDialog('Push');
