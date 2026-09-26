@@ -52,6 +52,8 @@ dialog {
     display: flex;
     justify-content: center;
     align-items: center;
+    animation: fade-in .2s ease-out;
+    > .dialog-content { animation: pop-in .25s cubic-bezier(.2, .8, .3, 1.2) }
   }
 }
 
@@ -86,9 +88,15 @@ footer {
   flex-direction: column;
   padding: .2rem;
   color: black;
+  animation: deal-in .3s ease-out backwards;
+  &:nth-child(2) { animation-delay: .06s }
+  &:nth-child(3) { animation-delay: .12s }
+  &:nth-child(4) { animation-delay: .18s }
+  &:nth-child(5) { animation-delay: .24s }
   &.diamonds, &.hearts { color: red }
-  > .card-back { transition: opacity .3s }
+  > .card-back { transition: opacity 0s .25s } /* swap faces at the midpoint of the flip */
   &:not(.face-down) > .card-back { opacity: 0 }
+  &.revealing { animation: flip .5s ease-in-out }
   @media (min-width: 368px) { width: 3.5rem }
 }
 
@@ -164,6 +172,8 @@ footer {
 
 #actions { width: 100% }
 
+#actions, #win-loss { animation: fade-in .3s ease-out }
+
 #actions > form {
   display: flex;
   align-items: center;
@@ -195,4 +205,33 @@ footer {
 #player-wins, #dealer-wins, #win-loss-rate {
   font-weight: bold;
   color: var(--text);
+}
+
+@keyframes fade-in {
+  from { opacity: 0 }
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(.95);
+  }
+}
+
+@keyframes flip {
+  50% { transform: perspective(400px) rotateY(90deg) }
+}
+
+@keyframes deal-in {
+  from {
+    opacity: 0;
+    transform: translateY(-.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }

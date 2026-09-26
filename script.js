@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function revealDealerCard() {
-    DEALER_DECK.querySelector('.face-down').classList.remove('face-down');
+    DEALER_DECK.querySelector('.face-down').classList.replace('face-down', 'revealing');
   }
 
   function updateDisplayedPlayerHandValue(onlyBest = false) {
