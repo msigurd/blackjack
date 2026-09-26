@@ -37,7 +37,7 @@ button {
   transition: background-color .15s, opacity .15s;
   &:not(:disabled) {
     cursor: pointer;
-    &:hover, &:active { background-color: #ffeaea }
+    &:hover, &:active { background-color: #e6f2ec }
   }
   &:disabled { opacity: .3 }
 }
@@ -71,7 +71,7 @@ footer {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   height: 6rem;
-  background-color: #ffc0c0;
+  background-color: #1f6b45;
   border-radius: 1rem;
   padding: .5rem;
 }
