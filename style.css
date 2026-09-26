@@ -2,6 +2,9 @@ html, body { height: 100% }
 
 html {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  --text: #1a1a1a;
+  --muted: #666;
 }
 
 body {
@@ -9,6 +12,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--text);
 }
 
 main {
@@ -21,11 +25,18 @@ main {
 button {
   width: 100%;
   padding: .5rem;
+  font-family: inherit;
   font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .05em;
   text-transform: uppercase;
+  color: inherit;
   background-color: white;
   border: 1px solid black;
+  border-radius: .375rem;
+  transition: background-color .15s, opacity .15s;
   &:not(:disabled) {
+    cursor: pointer;
     &:hover, &:active { background-color: #ffeaea }
   }
   &:disabled { opacity: .3 }
@@ -48,7 +59,10 @@ footer {
   margin-top: auto;
   padding: 1rem;
   font-size: 12px;
-  a { color: black }
+  a {
+    color: var(--muted);
+    &:hover { color: black }
+  }
 }
 
 .deck {
@@ -73,6 +87,7 @@ footer {
   padding: .2rem;
   color: black;
   &.diamonds, &.hearts { color: red }
+  > .card-back { transition: opacity .3s }
   &:not(.face-down) > .card-back { opacity: 0 }
   @media (min-width: 368px) { width: 3.5rem }
 }
@@ -85,7 +100,8 @@ footer {
   height: calc(100% - .4rem);
   width: calc(100% - .4rem);
   background-color: red;
-  border-radius: inherit;
+  border-radius: .25rem;
+  z-index: 1;
 }
 
 .card-rank {
@@ -98,16 +114,22 @@ footer {
 
 .suit-top { align-self: flex-start }
 
-.suit-bottom { align-self: flex-end }
+.suit-bottom {
+  align-self: flex-end;
+  transform: rotate(180deg);
+}
 
 .info {
   font-size: 14px;
+  label { color: var(--muted) }
   > * + * { margin-top: .5rem }
 }
 
 .info-value {
   display: block;
+  font-size: 18px;
   font-weight: bold;
+  font-variant-numeric: tabular-nums;
 }
 
 .action-btn {
@@ -124,8 +146,8 @@ footer {
 .dialog-content {
   background-color: white;
   padding: 2rem;
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / .1), 0 1px 2px -1px rgb(0 0 0 / .1);
-  border-radius: .5rem;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+  border-radius: .75rem;
 }
 
 #game-info {
@@ -166,6 +188,11 @@ footer {
 #win-loss {
   font-size: 12px;
   text-align: center;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 
-#player-wins, #dealer-wins, #win-loss-rate { font-weight: bold }
+#player-wins, #dealer-wins, #win-loss-rate {
+  font-weight: bold;
+  color: var(--text);
+}
