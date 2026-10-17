@@ -1,10 +1,37 @@
 html, body { height: 100% }
 
+:root {
+  color-scheme: light dark;
+  --bg: white;
+  --text: #1a1a1a;
+  --muted: #666;
+  --link-hover: black;
+  --surface: white;
+  --border: black;
+  --btn-hover: #e6f2ec;
+  --overlay: rgb(255 255 255 / .75);
+  --felt: #1f6b45;
+  --shadow: rgb(0 0 0 / .1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121412;
+    --text: #e8ece9;
+    --muted: #9aa39d;
+    --link-hover: white;
+    --surface: #1c201d;
+    --border: #8a948d;
+    --btn-hover: #24392d;
+    --overlay: rgb(18 20 18 / .75);
+    --felt: #17543a;
+    --shadow: rgb(0 0 0 / .4);
+  }
+}
+
 html {
   font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, Noto Sans, sans-serif;
   -webkit-font-smoothing: antialiased;
-  --text: #1a1a1a;
-  --muted: #666;
 }
 
 body {
@@ -13,6 +40,7 @@ body {
   flex-direction: column;
   align-items: center;
   color: var(--text);
+  background-color: var(--bg);
 }
 
 main {
@@ -31,13 +59,13 @@ button {
   letter-spacing: .05em;
   text-transform: uppercase;
   color: inherit;
-  background-color: white;
-  border: 1px solid black;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
   border-radius: .375rem;
   transition: background-color .15s, opacity .15s;
   &:not(:disabled) {
     cursor: pointer;
-    &:hover, &:active { background-color: #e6f2ec }
+    &:hover, &:active { background-color: var(--btn-hover) }
   }
   &:disabled { opacity: .3 }
 }
@@ -47,7 +75,7 @@ dialog {
   padding: 0;
   height: 100%;
   width: 100%;
-  background-color: rgb(255 255 255 / .75);
+  background-color: var(--overlay);
   &[open] {
     display: flex;
     justify-content: center;
@@ -63,7 +91,7 @@ footer {
   font-size: 12px;
   a {
     color: var(--muted);
-    &:hover { color: black }
+    &:hover { color: var(--link-hover) }
   }
 }
 
@@ -71,7 +99,7 @@ footer {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   height: 6rem;
-  background-color: #1f6b45;
+  background-color: var(--felt);
   border-radius: 1rem;
   padding: .5rem;
 }
@@ -82,7 +110,7 @@ footer {
   aspect-ratio: 2/3;
   width: 3rem;
   background-color: white;
-  box-shadow: 0 4px 6px -1px rgb(0 0 0 / .1), 0 2px 4px -2px rgb(0 0 0 / .1);
+  box-shadow: 0 4px 6px -1px var(--shadow), 0 2px 4px -2px var(--shadow);
   border-radius: .375rem;
   display: flex;
   flex-direction: column;
@@ -141,8 +169,8 @@ footer {
 }
 
 .action-btn {
-  border: solid 1px black;
-  box-shadow: 0 1px 0 black;
+  border: solid 1px var(--border);
+  box-shadow: 0 1px 0 var(--border);
   &:not(:disabled) {
     &:active {
       box-shadow: none;
@@ -152,9 +180,9 @@ footer {
 }
 
 .dialog-content {
-  background-color: white;
+  background-color: var(--surface);
   padding: 2rem;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
+  box-shadow: 0 10px 15px -3px var(--shadow), 0 4px 6px -4px var(--shadow);
   border-radius: .75rem;
 }
 
